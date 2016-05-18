@@ -17,7 +17,7 @@ parameters:
   required: true
 - description: A-MQ password, required
   name: SOURCE_REPOSITORY
-  value: https://github.com/benemon/camel-cxf-cdi-java-example
+  value: https://github.com/luigidemasi/camel-cxf-cdi-java-example
   required: true
 - description: Maven release version
   name: RELEASE_VERSION
