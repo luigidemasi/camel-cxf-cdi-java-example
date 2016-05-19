@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.redhat.bh</groupId>
+    <groupId>com.redhat.ldm</groupId>
     <version>1.0-SNAPSHOT</version>
     <artifactId>producer</artifactId>
 
