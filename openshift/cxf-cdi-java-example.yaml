@@ -98,7 +98,7 @@ objects:
       container: java
       delete: amq
       group: inmarsat-examples
-      project: helloworld
+      project: ${SERVICE_NAME}-producer
       provider: s2i
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-producer
@@ -381,8 +381,6 @@ objects:
       type: ImageChange
     - type: ConfigChange
   status: {}
-
-
 
  ######################    CONFIG   DEPLOYMENT CONFIG
 
