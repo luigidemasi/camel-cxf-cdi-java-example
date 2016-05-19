@@ -83,7 +83,7 @@ objects:
       container: java
       delete: amq
       version: 2.2.0.redhat-079
-    name: ${SERVICE_NAME}-input
+    name: ${SERVICE_NAME}-producer
 
 - apiVersion: v1
   kind: ImageStream
@@ -96,7 +96,7 @@ objects:
       container: java
       delete: amq
       version: 2.2.0.redhat-079
-    name: ${SERVICE_NAME}-output
+    name: ${SERVICE_NAME}-consumer
 
 - apiVersion: v1
   kind: Route
