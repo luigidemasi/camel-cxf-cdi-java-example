@@ -93,14 +93,14 @@ objects:
       openshift.io/generated-by: OpenShiftWebConsole
     creationTimestamp: null
     labels:
-     component: ${SERVICE_NAME}-producer
-           container: java
-           delete: amq
-           group: quickstarts
-           project: ${SERVICE_NAME}-producer
-           provider: s2i
-           version: 2.2.0.redhat-079
-         name: ${SERVICE_NAME}-producer
+      component: ${SERVICE_NAME}-producer
+      container: java
+      delete: amq
+      group: inmarsat-examples
+      project: ${SERVICE_NAME}-producer
+      provider: s2i
+      version: 2.2.0.redhat-079
+    name: ${SERVICE_NAME}-producer
   spec:
     output:
       to:
@@ -127,46 +127,56 @@ objects:
   status:
     lastVersion: 0
 
-    - apiVersion: v1
-      kind: BuildConfig
-      metadata:
-        annotations:
-          openshift.io/generated-by: OpenShiftWebConsole
-        creationTimestamp: null
-        labels:
-         component: ${SERVICE_NAME}-consumer
-               container: java
-               delete: amq
-               group: quickstarts
-               project: ${SERVICE_NAME}-consumer
-               provider: s2i
-               version: 2.2.0.redhat-079
-             name: ${SERVICE_NAME}-consumer
-      spec:
-        output:
-          to:
-            kind: ImageStreamTag
-            name: ${SERVICE_NAME}-consumer:latest
-        resources: {}
-        source:
-          git:
-            ref: master
-            uri: ${SOURCE_REPOSITORY}
-            contextDir: consumer
-          type: Git
-        strategy:
-          sourceStrategy:
-            from:
-              kind: ImageStreamTag
-              name: fis-java-openshift:1.0
-              namespace: openshift
-          type: Source
-        triggers:
-        - type: ConfigChange
-        - imageChange: {}
-          type: ImageChange
-      status:
-        lastVersion: 0
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    labels:
+      component: ${SERVICE_NAME}-consumer
+      container: java
+      delete: amq
+      group: inmarsat-examples
+      project: ${SERVICE_NAME}-consumer
+      provider: s2i
+      version: 2.2.0.redhat-079
+    name: ${SERVICE_NAME}-consumer
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${SERVICE_NAME}-consumer:latest
+    resources: {}
+    source:
+      git:
+        ref: master
+        uri: ${SOURCE_REPOSITORY}
+        contextDir: consumer
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+        - name: BUILD_LOGLEVEL
+          value: "5"
+        - name: ARTIFACT_DIR
+        - name: MAVEN_ARGS
+          value: package -DskipTests -e
+        - name: MAVEN_ARGS_APPEND
+        - name: RELEASE_VERSION
+          value: ${RELEASE_VERSION}
+        forcePull: true
+        from:
+          kind: ImageStreamTag
+          name: fis-java-openshift:1.0
+          namespace: openshift
+        type: Source
+      triggers:
+      - type: ConfigChange
+      - imageChange: {}
+        type: ImageChange
+  status:
+    lastVersion: 0
 
 - apiVersion: v1
   kind: ImageStream
