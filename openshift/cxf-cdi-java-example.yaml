@@ -192,9 +192,9 @@ objects:
             value: ${AMQ_USER}
           - name: BROKER_AMQ_TCP_PASSWORD
             value: ${AMQ_PASSWORD}
-          image: ${SERVICE_NAME}
+          image: ${SERVICE_NAME}-producer
           imagePullPolicy: Always
-          name: ${SERVICE_NAME}
+          name: ${SERVICE_NAME}-producer
           ports:
           - containerPort: 8080
             name: http
@@ -214,8 +214,8 @@ objects:
         containerNames:
         - ${SERVICE_NAME}-producer
         from:
-          kind: ImageStreamTag
-          name: ${SERVICE_NAME}-producer:latest
+          kind: ImageStream
+          name: ${SERVICE_NAME}-producer
       type: ImageChange
     - type: ConfigChange
   status: {}
@@ -382,16 +382,18 @@ objects:
     - type: ConfigChange
   status: {}
 
- ######################    CONFIG   DEPLOYMENT CONFIG
+ ######################    COSUMER DEPLOYMENT CONFIG
 
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
     creationTimestamp: null
     labels:
-      app: ${SERVICE_NAME}-consumer
+      #app: ${SERVICE_NAME}-consumer
+         component: ${SERVICE_NAME}-consumer
+         container: java
+         deploymentconfig: ${SERVICE_NAME}-consumer
+         version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-consumer
   spec:
     replicas: 1
@@ -419,9 +421,9 @@ objects:
             value: ${AMQ_USER}
           - name: BROKER_AMQ_TCP_PASSWORD
             value: ${AMQ_PASSWORD}
-          image: ${SERVICE_NAME}
+          image: ${SERVICE_NAME}-consumer
           imagePullPolicy: Always
-          name: ${SERVICE_NAME}
+          name: ${SERVICE_NAME}-consumer
           ports:
           - containerPort: 8080
             name: http
@@ -441,8 +443,8 @@ objects:
         containerNames:
         - ${SERVICE_NAME}-consumer
         from:
-          kind: ImageStreamTag
-          name: ${SERVICE_NAME}-consumer:latest
+          kind: ImageStream
+          name: ${SERVICE_NAME}-consumer
       type: ImageChange
     - type: ConfigChange
   status: {}
