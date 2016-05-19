@@ -17,7 +17,7 @@ parameters:
   required: true
 - description: A-MQ password, required
   name: SOURCE_REPOSITORY
-  value: https://github.com/luigidemasi/camel-cxf-cdi-java-example
+  value: https://github.com/luigidemasi/camel-cxf-cdi-java-example.git
   required: true
 - description: Maven release version
   name: RELEASE_VERSION
@@ -88,18 +88,17 @@ objects:
 
 
 ################  BUILD CONFIG FOR PRODUCER
+
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
     creationTimestamp: null
     labels:
       component: ${SERVICE_NAME}-producer
       container: java
       delete: amq
       group: inmarsat-examples
-      project: ${SERVICE_NAME}-producer
+      project: helloworld
       provider: s2i
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-producer
@@ -113,7 +112,7 @@ objects:
       git:
         ref: master
         uri: ${SOURCE_REPOSITORY}
-        contextDir: producer
+      contextDir: producer
       type: Git
     strategy:
       sourceStrategy:
@@ -139,6 +138,87 @@ objects:
   status:
     lastVersion: 0
 
+
+################  PRODUCER  IMAGESTREAMS CONFIG
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-03-07T16:25:19Z
+    creationTimestamp: null
+    labels:
+      component: ${SERVICE_NAME}-producer
+      container: java
+      delete: amq
+      version: 2.2.0.redhat-079
+    name: ${SERVICE_NAME}-producer
+
+
+################  PRODUCER  DEPLOYMENT CONFIG
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftWebConsole
+    creationTimestamp: null
+    labels:
+      app: ${SERVICE_NAME}-producer
+    name: ${SERVICE_NAME}-producer
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${SERVICE_NAME}-producer
+    strategy:
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: ${SERVICE_NAME}-producer
+          deploymentconfig: ${SERVICE_NAME}-producer
+      spec:
+        containers:
+        - env:
+          - name: BROKER_AMQ_TCP_USERNAME
+            value: ${AMQ_USER}
+          - name: BROKER_AMQ_TCP_PASSWORD
+            value: ${AMQ_PASSWORD}
+          image: ${SERVICE_NAME}
+          imagePullPolicy: Always
+          name: ${SERVICE_NAME}
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${SERVICE_NAME}-producer
+        from:
+          kind: ImageStreamTag
+          name: ${SERVICE_NAME}-producer:latest
+      type: ImageChange
+    - type: ConfigChange
+  status: {}
 
 
 ################  BUILD CONFIG FOR CONSUMER
@@ -168,7 +248,7 @@ objects:
       git:
         ref: master
         uri: ${SOURCE_REPOSITORY}
-        contextDir: consumer
+      contextDir: consumer
       type: Git
     strategy:
       sourceStrategy:
@@ -194,18 +274,7 @@ objects:
   status:
     lastVersion: 0
 
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      openshift.io/image.dockerRepositoryCheck: 2016-03-07T16:25:19Z
-    creationTimestamp: null
-    labels:
-      component: ${SERVICE_NAME}-producer
-      container: java
-      delete: amq
-      version: 2.2.0.redhat-079
-    name: ${SERVICE_NAME}-producer
+################  PRODUCER  IMAGESTREAMS CONFIG
 
 - apiVersion: v1
   kind: ImageStream
@@ -219,6 +288,9 @@ objects:
       delete: amq
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-consumer
+
+
+######################    AMQ  DEPLOYMENT CONFIG
 
 - apiVersion: v1
   kind: DeploymentConfig
@@ -309,69 +381,10 @@ objects:
       type: ImageChange
     - type: ConfigChange
   status: {}
-  
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
-    creationTimestamp: null
-    labels:
-      app: ${SERVICE_NAME}-producer
-    name: ${SERVICE_NAME}-producer
-  spec:
-    replicas: 1
-    selector:
-      deploymentconfig: ${SERVICE_NAME}-producer
-    strategy:
-      resources: {}
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      type: Rolling
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: ${SERVICE_NAME}-producer
-          deploymentconfig: ${SERVICE_NAME}-producer
-      spec:
-        containers:
-        - env:
-          - name: BROKER_AMQ_TCP_USERNAME
-            value: ${AMQ_USER}
-          - name: BROKER_AMQ_TCP_PASSWORD
-            value: ${AMQ_PASSWORD}
-          image: ${SERVICE_NAME}
-          imagePullPolicy: Always
-          name: ${SERVICE_NAME}
-          ports:
-          - containerPort: 8080
-            name: http
-            protocol: TCP
-          - containerPort: 8778
-            name: jolokia
-            protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ${SERVICE_NAME}-producer
-        from:
-          kind: ImageStreamTag
-          name: ${SERVICE_NAME}-producer:latest
-      type: ImageChange
-    - type: ConfigChange
-  status: {}
+
+
+
+ ######################    CONFIG   DEPLOYMENT CONFIG
 
 - apiVersion: v1
   kind: DeploymentConfig
