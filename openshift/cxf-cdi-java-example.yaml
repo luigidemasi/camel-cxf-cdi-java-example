@@ -42,7 +42,7 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      app: ${SERVICE_NAME}
+      app: ${SERVICE_NAME}-producer
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -70,33 +70,6 @@ objects:
     type: ClusterIP
   status:
     loadBalancer: {}
-
-
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      openshift.io/image.dockerRepositoryCheck: 2016-03-07T16:25:19Z
-    creationTimestamp: null
-    labels:
-      component: ${SERVICE_NAME}-producer
-      container: java
-      delete: amq
-      version: 2.2.0.redhat-079
-    name: ${SERVICE_NAME}-producer
-
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      openshift.io/image.dockerRepositoryCheck: 2016-03-07T16:25:19Z
-    creationTimestamp: null
-    labels:
-      component: ${SERVICE_NAME}-consumer
-      container: java
-      delete: amq
-      version: 2.2.0.redhat-079
-    name: ${SERVICE_NAME}-consumer
 
 - apiVersion: v1
   kind: Route
@@ -183,28 +156,43 @@ objects:
       type: Git
     strategy:
       sourceStrategy:
-        env:
-        - name: BUILD_LOGLEVEL
-          value: "5"
-        - name: ARTIFACT_DIR
-        - name: MAVEN_ARGS
-          value: package -DskipTests -e
-        - name: MAVEN_ARGS_APPEND
-        - name: RELEASE_VERSION
-          value: ${RELEASE_VERSION}
-        forcePull: true
         from:
           kind: ImageStreamTag
           name: fis-java-openshift:1.0
           namespace: openshift
-        type: Source
-      triggers:
-      - type: ConfigChange
-      - imageChange: {}
-        type: ImageChange
+      type: Source
+    triggers:
+    - type: ConfigChange
+    - imageChange: {}
+      type: ImageChange
   status:
     lastVersion: 0
 
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-03-07T16:25:19Z
+    creationTimestamp: null
+    labels:
+      component: ${SERVICE_NAME}-producer
+      container: java
+      delete: amq
+      version: 2.2.0.redhat-079
+    name: ${SERVICE_NAME}-producer
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.dockerRepositoryCheck: 2016-03-07T16:25:19Z
+    creationTimestamp: null
+    labels:
+      component: ${SERVICE_NAME}-consumer
+      container: java
+      delete: amq
+      version: 2.2.0.redhat-079
+    name: ${SERVICE_NAME}-consumer
 
 - apiVersion: v1
   kind: DeploymentConfig
