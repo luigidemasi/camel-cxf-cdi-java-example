@@ -29,7 +29,7 @@ import io.fabric8.annotations.ServiceName;
 /**
  * Configures all our Camel routes, components, endpoints and beans
  */
-@ContextName("camelContext")
+@ContextName("ProducerContext")
 public class GreetingRoute extends RouteBuilder {
 
 	@Inject
@@ -48,8 +48,7 @@ public class GreetingRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
-		from(cxfEndpoint).beanRef("greetingProcessor").log("In: ${body}").inOnly("amq:queue:greetings")
-				.setBody(simple("Hello, ${body}!"));
+		from(cxfEndpoint).beanRef("greetingProcessor").log("In: ${body}").inOnly("amq:queue:greetings").setBody(simple("Hello, ${body}!"));
 	}
 
 }
