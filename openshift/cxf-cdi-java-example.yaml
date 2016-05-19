@@ -42,7 +42,7 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      app: ${SERVICE_NAME}-producer
+      app: ${SERVICE_NAME}
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -85,7 +85,9 @@ objects:
       kind: Service
       name: ${SERVICE_NAME}
   status: {}
-  
+
+
+################  BUILD CONFIG FOR PRODUCER
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -115,10 +117,20 @@ objects:
       type: Git
     strategy:
       sourceStrategy:
+        env:
+        - name: BUILD_LOGLEVEL
+          value: "5"
+        - name: ARTIFACT_DIR
+        - name: MAVEN_ARGS
+          value: package -DskipTests -e
+        - name: MAVEN_ARGS_APPEND
+        - name: RELEASE_VERSION
+          value: ${RELEASE_VERSION}
+        forcePull: true
         from:
           kind: ImageStreamTag
           name: fis-java-openshift:1.0
-          namespace: helloworld
+          namespace: openshift
       type: Source
     triggers:
     - type: ConfigChange
@@ -126,6 +138,10 @@ objects:
       type: ImageChange
   status:
     lastVersion: 0
+
+
+
+################  BUILD CONFIG FOR CONSUMER
 
 - apiVersion: v1
   kind: BuildConfig
@@ -156,10 +172,20 @@ objects:
       type: Git
     strategy:
       sourceStrategy:
+        env:
+        - name: BUILD_LOGLEVEL
+          value: "5"
+        - name: ARTIFACT_DIR
+        - name: MAVEN_ARGS
+          value: package -DskipTests -e
+        - name: MAVEN_ARGS_APPEND
+        - name: RELEASE_VERSION
+          value: ${RELEASE_VERSION}
+        forcePull: true
         from:
           kind: ImageStreamTag
           name: fis-java-openshift:1.0
-          namespace: helloworld
+          namespace: openshift
       type: Source
     triggers:
     - type: ConfigChange
