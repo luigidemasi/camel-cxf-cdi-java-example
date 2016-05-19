@@ -118,7 +118,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: fis-java-openshift:1.0
-          namespace: openshift
+          namespace: helloworld
       type: Source
     triggers:
     - type: ConfigChange
@@ -159,7 +159,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: fis-java-openshift:1.0
-          namespace: openshift
+          namespace: helloworld
       type: Source
     triggers:
     - type: ConfigChange
