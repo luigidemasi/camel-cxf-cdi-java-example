@@ -53,7 +53,7 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      app: ${SERVICE_NAME}-producer
+      app: ${SERVICE_NAME}
       container: java
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}
@@ -76,7 +76,7 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      component: ${SERVICE_NAME}-producer
+      component: ${SERVICE_NAME}
       container: java
       delete: amq
       version: 2.2.0.redhat-079
