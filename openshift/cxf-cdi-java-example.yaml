@@ -43,6 +43,7 @@ objects:
       targetPort: 8080
     selector:
       app: ${SERVICE_NAME}
+      component: ${SERVICE_NAME}-producer
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -76,7 +77,7 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      component: ${SERVICE_NAME}
+      component: ${SERVICE_NAME}-producer
       container: java
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-route
@@ -87,7 +88,7 @@ objects:
   status: {}
 
 
-################  BUILD CONFIG FOR PRODUCER
+################# BUILD CONFIG FOR PRODUCER
 
 - apiVersion: v1
   kind: BuildConfig
@@ -214,8 +215,8 @@ objects:
         containerNames:
         - ${SERVICE_NAME}-producer
         from:
-          kind: ImageStream
-          name: ${SERVICE_NAME}-producer
+          kind: ImageStreamTag
+          name: ${SERVICE_NAME}-producer:latest
       type: ImageChange
     - type: ConfigChange
   status: {}
@@ -443,8 +444,8 @@ objects:
         containerNames:
         - ${SERVICE_NAME}-consumer
         from:
-          kind: ImageStream
-          name: ${SERVICE_NAME}-consumer
+          kind: ImageStreamTag
+          name: ${SERVICE_NAME}-consumer:latest
       type: ImageChange
     - type: ConfigChange
   status: {}
