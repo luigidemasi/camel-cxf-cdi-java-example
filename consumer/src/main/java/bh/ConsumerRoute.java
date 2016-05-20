@@ -45,7 +45,9 @@ public class ConsumerRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 
-		from(amqEndpoint).convertBodyTo(java.lang.String.class).log(LoggingLevel.INFO,"Message Received: ${body}!").setBody(simple("Message Received:\n ${body}!"));
+		from(amqEndpoint)
+				.convertBodyTo(java.lang.String.class)
+				.log(LoggingLevel.INFO,"Message Received: ${body}!")
+				.setBody(simple("Message Received:\n ${body}!"));
 	}
-
 }
