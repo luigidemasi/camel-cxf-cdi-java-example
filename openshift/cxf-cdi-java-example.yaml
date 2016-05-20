@@ -42,8 +42,7 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      app: ${SERVICE_NAME}
-      component: ${SERVICE_NAME}-producer
+      deploymentConfig: ${SERVICE_NAME}-producer
     sessionAffinity: None
     type: ClusterIP
   status:
@@ -79,6 +78,7 @@ objects:
     labels:
       component: ${SERVICE_NAME}-producer
       container: java
+      delete: amq
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-route
   spec:
@@ -154,6 +154,14 @@ objects:
       delete: amq
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-producer
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SERVICE_NAME}-producer:latest
+      name: latest
+  status:
+    dockerImageRepository: ""
 
 
 ################  PRODUCER  DEPLOYMENT CONFIG
@@ -275,7 +283,7 @@ objects:
   status:
     lastVersion: 0
 
-################  PRODUCER  IMAGESTREAMS CONFIG
+################  CONSUMER  IMAGESTREAMS CONFIG
 
 - apiVersion: v1
   kind: ImageStream
@@ -289,7 +297,14 @@ objects:
       delete: amq
       version: 2.2.0.redhat-079
     name: ${SERVICE_NAME}-consumer
-
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SERVICE_NAME}-consumer:latest
+      name: latest
+  status:
+    dockerImageRepository: ""
 
 ######################    AMQ  DEPLOYMENT CONFIG
 
