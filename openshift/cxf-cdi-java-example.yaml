@@ -7,7 +7,6 @@ metadata:
 parameters:
 - description: The template service name, required
   name: SERVICE_NAME
-  value: cxf-cdi-java
   required: true
 - description: A-MQ username, required
   name: AMQ_USER
@@ -56,6 +55,7 @@ objects:
       app: ${SERVICE_NAME}
       container: java
       version: 2.2.0.redhat-079
+      component: ${SERVICE_NAME}
     name: ${SERVICE_NAME}
   spec:
     ports:
