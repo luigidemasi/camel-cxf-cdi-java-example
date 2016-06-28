@@ -5,11 +5,16 @@
     <profiles>
         <profile>
             <id>build.repos</id>
+
+            <properties>
+                <repo.base.url>http://docker-nexus3-nexus.openshift.extrasys.it/repository</repo.base.url>
+            </properties>
+
             <repositories>
                 <repository>
                     <id>rh-fuse</id>
                     <name>Red Hat General Availability Repository</name>
-                    <url>http://docker-nexus3-nexus.openshift.extrasys.it/repository/rh-fuse/</url>
+                    <url>${repo.base.url}/rh-fuse/</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
@@ -19,13 +24,122 @@
                     </releases>
                 </repository>
 
+                <repository>
+                    <id>ebrexternal</id>
+                    <url>${repo.base.url}/ebrexternal/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>ebrreleases</id>
+                    <url>${repo.base.url}/ebrreleases/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>fuse-ea</id>
+                    <url>${repo.base.url}/fuse-ea/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>fuse-public</id>
+                    <url>${repo.base.url}/fuse-public/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>fuse-release</id>
+                    <url>${repo.base.url}/fuse-release/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>jbossearlyaccess</id>
+                    <url>${repo.base.url}/jbossearlyaccess/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>jbosspublic</id>
+                    <url>${repo.base.url}/jbosspublic/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>jbossreleases</id>
+                    <url>${repo.base.url}/jbossreleases/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+                <repository>
+                    <id>scala</id>
+                    <url>${repo.base.url}/scala/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                </repository>
+
+
             </repositories>
 
             <pluginRepositories>
                 <pluginRepository>
                     <id>rh-fuse-plugin</id>
                     <name>FuseSource Community Early Access Release Repository</name>
-                    <url>http://docker-nexus3-nexus.openshift.extrasys.it/repository/rh-fuse/</url>
+                    <url>${repo.base.url}/repository/rh-fuse/</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
